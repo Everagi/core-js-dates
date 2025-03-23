@@ -137,8 +137,11 @@ function getCountDaysOnPeriod(dateStart, dateEnd) {
  * '2024-02-02', { start: '2024-02-02', end: '2024-03-02' } => true
  * '2024-02-10', { start: '2024-02-02', end: '2024-03-02' } => true
  */
-function isDateInPeriod(/* date, period */) {
-  throw new Error('Not implemented');
+function isDateInPeriod(date, period) {
+  const dateToCheck = Date.parse(date);
+  const startDate = Date.parse(period.start);
+  const endDate = Date.parse(period.end);
+  return dateToCheck >= startDate && dateToCheck <= endDate;
 }
 
 /**
@@ -204,8 +207,13 @@ function getCountWeekendsInMonth(month, year) {
  * Date(2024, 0, 31) => 5
  * Date(2024, 1, 23) => 8
  */
-function getWeekNumberByDate(/* date */) {
-  throw new Error('Not implemented');
+function getWeekNumberByDate(date) {
+  const clonedDate = new Date(date.getTime());
+  clonedDate.setDate(clonedDate.getDate() + 4 - (clonedDate.getDay() || 7));
+  const yearStart = new Date(clonedDate.getFullYear(), 0, 1);
+  const daysDiff = Math.floor((clonedDate - yearStart) / (24 * 60 * 60 * 1000));
+  const weekNumber = Math.ceil((daysDiff + 1) / 7);
+  return weekNumber;
 }
 
 /**
@@ -219,8 +227,18 @@ function getWeekNumberByDate(/* date */) {
  * Date(2024, 0, 13) => Date(2024, 8, 13)
  * Date(2023, 1, 1) => Date(2023, 9, 13)
  */
-function getNextFridayThe13th(/* date */) {
-  throw new Error('Not implemented');
+function getNextFridayThe13th(date) {
+  if (date.getDate() >= 13) {
+    date.setMonth(date.getMonth() + 1);
+  }
+  date.setDate(13);
+  for (;;) {
+    if (date.getDay() === 5) {
+      return new Date(date.getTime());
+    }
+    date.setMonth(date.getMonth() + 1);
+    date.setDate(13);
+  }
 }
 
 /**
